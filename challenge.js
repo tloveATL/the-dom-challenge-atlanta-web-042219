@@ -1,18 +1,14 @@
 document.addEventListener("DOMContentLoaded", init)
 let timer
-let status = 'paused'
+let status = 'not paused'
 let counter = document.getElementById('counter')
 let form = document.getElementById('comment-form')
+let likes = document.querySelector(`ul[class='likes']`)
 
 document.addEventListener("click", handleEvents)
 
 function init(){
-  timer = window.setInterval(increaseCounter, 1000)
-}
-
-function increaseCounter(){
-  let num = parseInt(counter.innerText)
-  counter.innerText = num + 1
+  timer = window.setInterval(function(){counter.innerText++}, 1000)
 }
 
 function handleEvents(e){
@@ -20,6 +16,12 @@ function handleEvents(e){
   if(status !== 'paused'){
     if(e.target.id === 'submit'){
       addComment()
+    } else if(e.target.id === '-'){
+      counter.innerText--
+    } else if(e.target.id === '+'){
+      counter.innerText++
+    } else if(e.target.id === '<3'){
+      likeNum()
     }
   }
 
@@ -38,7 +40,6 @@ function pauseApp(e){
     init()
     status = 'not paused'
   }
-  console.log(e.target)
 }
 
 function addComment(){
@@ -46,4 +47,14 @@ function addComment(){
   let commentList = document.getElementById('list')
   commentList.innerHTML += `<p>${commentInput.value}</p>`
   commentInput.value = ''
+}
+
+
+function likeNum(){
+  let likedNum = document.querySelector(`ul[class="likes"] > li[data-num="${counter.innerText}"]`)
+  if(likedNum){
+    let span = likedNum.querySelector('span').innerText++
+  } else {
+    likes.innerHTML += `<li data-num="${counter.innerText}">${counter.innerText} has been liked <span>1</span> times</li>`
+  }
 }
